@@ -37,3 +37,10 @@ func TestDialTurnLeftPassing0(t *testing.T) {
 	dial.TurnLeft(51)
 	assert.Equal(t, 99, dial.Position)
 }
+
+func TestDialPointToZeroTurningRight(t *testing.T) {
+	dial := NewDial()
+	dial.TurnRight(50)
+	assert.Equal(t, 0, dial.Position)
+	assert.Equal(t, 1, dial.ZeroPointingCounts)
+}

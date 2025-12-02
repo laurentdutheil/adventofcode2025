@@ -11,6 +11,13 @@ func NewDial() *Dial {
 
 func (d *Dial) TurnRight(clicks int) {
 	d.Position = (d.Position + clicks) % 100
+	d.checkPosition()
+}
+
+func (d *Dial) checkPosition() {
+	if d.Position == 0 {
+		d.ZeroPointingCounts++
+	}
 }
 
 func (d *Dial) TurnLeft(clicks int) {
