@@ -11,6 +11,7 @@ import (
 func TestDialStartAt50(t *testing.T) {
 	dial := NewDial()
 	assert.Equal(t, 50, dial.Position)
+	assert.Equal(t, 0, dial.ZeroPointingCounts)
 }
 
 func TestDialTurnRight(t *testing.T) {

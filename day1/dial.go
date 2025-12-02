@@ -1,7 +1,8 @@
 package day1
 
 type Dial struct {
-	Position int
+	Position           int
+	ZeroPointingCounts int
 }
 
 func NewDial() *Dial {
