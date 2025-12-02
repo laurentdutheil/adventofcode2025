@@ -1,6 +1,10 @@
 package day1
 
-import "strconv"
+import (
+	"bufio"
+	"os"
+	"strconv"
+)
 
 type Parser struct {
 	dial *Dial
@@ -14,6 +18,15 @@ func (p *Parser) Parse(line string) {
 		p.dial.TurnLeft(clicks)
 	case 'R':
 		p.dial.TurnRight(clicks)
+	}
+}
+
+func (p *Parser) ParseFile(filename string) {
+	file, _ := os.Open(filename)
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		p.Parse(scanner.Text())
 	}
 }
 

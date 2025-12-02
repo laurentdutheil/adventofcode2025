@@ -21,3 +21,13 @@ func TestParseLineLeft(t *testing.T) {
 	p.Parse("L12")
 	assert.Equal(t, 38, dial.Position)
 }
+
+func TestParseFile(t *testing.T) {
+	dial := NewDial()
+	p := NewParser(dial)
+
+	p.ParseFile("input.txt")
+
+	TheAnswer := 999
+	assert.Equal(t, TheAnswer, dial.ZeroPointingCounts)
+}
