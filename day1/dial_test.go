@@ -12,3 +12,9 @@ func TestDialStartAt50(t *testing.T) {
 	dial := NewDial()
 	assert.Equal(t, 50, dial.Position)
 }
+
+func TestDialTurnRight(t *testing.T) {
+	dial := NewDial()
+	dial.TurnRight(23)
+	assert.Equal(t, 73, dial.Position)
+}

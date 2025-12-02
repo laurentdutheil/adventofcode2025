@@ -7,3 +7,7 @@ type Dial struct {
 func NewDial() *Dial {
 	return &Dial{Position: 50}
 }
+
+func (d *Dial) TurnRight(clicks int) {
+	d.Position += clicks
+}
