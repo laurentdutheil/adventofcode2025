@@ -13,5 +13,5 @@ func (d *Dial) TurnRight(clicks int) {
 }
 
 func (d *Dial) TurnLeft(clicks int) {
-	d.Position -= clicks
+	d.Position = (d.Position + 100 - clicks) % 100
 }
