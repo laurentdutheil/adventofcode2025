@@ -14,3 +14,10 @@ func TestParseLineRight(t *testing.T) {
 	p.Parse("R23")
 	assert.Equal(t, 73, dial.Position)
 }
+
+func TestParseLineLeft(t *testing.T) {
+	dial := NewDial()
+	p := NewParser(dial)
+	p.Parse("L12")
+	assert.Equal(t, 38, dial.Position)
+}
