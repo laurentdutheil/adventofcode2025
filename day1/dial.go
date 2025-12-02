@@ -11,3 +11,7 @@ func NewDial() *Dial {
 func (d *Dial) TurnRight(clicks int) {
 	d.Position += clicks
 }
+
+func (d *Dial) TurnLeft(clicks int) {
+	d.Position -= clicks
+}

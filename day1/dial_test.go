@@ -18,3 +18,9 @@ func TestDialTurnRight(t *testing.T) {
 	dial.TurnRight(23)
 	assert.Equal(t, 73, dial.Position)
 }
+
+func TestDialTurnLeft(t *testing.T) {
+	dial := NewDial()
+	dial.TurnLeft(12)
+	assert.Equal(t, 38, dial.Position)
+}
