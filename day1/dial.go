@@ -14,12 +14,13 @@ func (d *Dial) TurnRight(clicks int) {
 	d.checkPosition()
 }
 
+func (d *Dial) TurnLeft(clicks int) {
+	d.Position = (d.Position + 100 - clicks) % 100
+	d.checkPosition()
+}
+
 func (d *Dial) checkPosition() {
 	if d.Position == 0 {
 		d.ZeroPointingCounts++
 	}
-}
-
-func (d *Dial) TurnLeft(clicks int) {
-	d.Position = (d.Position + 100 - clicks) % 100
 }
