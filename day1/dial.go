@@ -9,7 +9,7 @@ func NewDial() *Dial {
 }
 
 func (d *Dial) TurnRight(clicks int) {
-	d.Position += clicks
+	d.Position = (d.Position + clicks) % 100
 }
 
 func (d *Dial) TurnLeft(clicks int) {
