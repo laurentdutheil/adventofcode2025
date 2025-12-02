@@ -28,6 +28,6 @@ func TestParseFile(t *testing.T) {
 
 	p.ParseFile("input.txt")
 
-	TheAnswer := 999
+	TheAnswer := 6099
 	assert.Equal(t, TheAnswer, dial.ZeroPointingCounts)
 }
