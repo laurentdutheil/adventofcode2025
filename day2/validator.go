@@ -8,22 +8,26 @@ var primes = []int{2, 3, 5, 7, 11}
 
 func Validate(id int) bool {
 	sId := strconv.Itoa(id)
-	if len(sId) == 1 {
-		return true
-	}
 
-	for _, div := range primes {
-		i := len(sId) / div
-		result := len(sId)%div == 0
-		for j := 0; j < div-1; j++ {
-			result = result && sId[j*i:(j+1)*i] == sId[(j+1)*i:(j+2)*i]
+	for _, nbPart := range primes {
+		if len(sId)%nbPart != 0 {
+			continue
 		}
-		if result {
+		if allPartsAreEqual(sId, nbPart) {
 			return false
 		}
 	}
 
 	return true
+}
+
+func allPartsAreEqual(sId string, div int) bool {
+	nbChar := len(sId) / div
+	result := true
+	for i := 0; i < div-1; i++ {
+		result = result && sId[i*nbChar:(i+1)*nbChar] == sId[(i+1)*nbChar:(i+2)*nbChar]
+	}
+	return result
 }
 
 func ValidateInterval(interval []int) []int {
