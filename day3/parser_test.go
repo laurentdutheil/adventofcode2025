@@ -9,5 +9,5 @@ import (
 
 func TestParseFile(t *testing.T) {
 	total := ParseFile()
-	assert.Equal(t, 17321, total)
+	assert.Equal(t, 171989894144198, total)
 }

@@ -16,7 +16,12 @@ func FindMaxDigit(bank string) (int, int) {
 }
 
 func MaxJoltage(text string) int {
-	index, tens := FindMaxDigit(text[:len(text)-1])
-	_, units := FindMaxDigit(text[index+1:])
-	return tens*10 + units
+	result := 0
+	index := 0
+	for i := 11; i >= 0; i-- {
+		j, digit := FindMaxDigit(text[index : len(text)-i])
+		index = index + j + 1
+		result = result*10 + digit
+	}
+	return result
 }
