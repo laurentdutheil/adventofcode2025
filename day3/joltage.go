@@ -1,6 +1,9 @@
 package day3
 
-import "strconv"
+import (
+	"math"
+	"strconv"
+)
 
 func FindMaxDigit(bank string) (int, int) {
 	m := 0
@@ -15,13 +18,16 @@ func FindMaxDigit(bank string) (int, int) {
 	return maxIndex, m
 }
 
-func MaxJoltage(text string) int {
-	result := 0
-	index := 0
-	for i := 11; i >= 0; i-- {
-		j, digit := FindMaxDigit(text[index : len(text)-i])
-		index = index + j + 1
-		result = result*10 + digit
+func MaxJoltage(bank string) int {
+	return maxJoltageRecursive(bank, 12)
+}
+
+func maxJoltageRecursive(bank string, nbDigit int) int {
+	if nbDigit == 1 {
+		_, digit := FindMaxDigit(bank)
+		return digit
 	}
-	return result
+	nbDigit--
+	i, digit := FindMaxDigit(bank[:len(bank)-nbDigit])
+	return digit*int(math.Pow10(nbDigit)) + maxJoltageRecursive(bank[i+1:], nbDigit)
 }
