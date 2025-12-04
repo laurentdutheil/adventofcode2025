@@ -13,19 +13,25 @@ func TestFindAdjacents(t *testing.T) {
 		position Position
 		expected string
 	}{
+		{"adjacents of 1", Position{Column: 0, Row: 0}, "245"},
+		{"adjacents of 2", Position{Column: 1, Row: 0}, "13456"},
+		{"adjacents of 3", Position{Column: 2, Row: 0}, "256"},
+		{"adjacents of 4", Position{Column: 0, Row: 1}, "12578"},
 		{"adjacents of 5", Position{Column: 1, Row: 1}, "12346789"},
-		{"adjacents of 1", Position{Column: 0, Row: 0}, "....2.45"},
-		{"adjacents of 9", Position{Column: 2, Row: 2}, "56.8...."},
-		{"adjacents of 7", Position{Column: 0, Row: 2}, ".45.8..."},
-		{"adjacents of 3", Position{Column: 2, Row: 0}, "...2.56."},
+		{"adjacents of 6", Position{Column: 2, Row: 1}, "23589"},
+		{"adjacents of 7", Position{Column: 0, Row: 2}, "458"},
+		{"adjacents of 8", Position{Column: 1, Row: 2}, "45679"},
+		{"adjacents of 9", Position{Column: 2, Row: 2}, "568"},
 	}
 	grid := NewGrid()
 	grid.AddLine("123")
 	grid.AddLine("456")
 	grid.AddLine("789")
-	for _, test := range tests {
+
+	for position, adjacents := range grid.AllAdjacents() {
+		test := tests[3*int(position.Row)+int(position.Column)]
 		t.Run(test.name, func(t *testing.T) {
-			assert.Equal(t, test.expected, grid.FindAdjacents(test.position))
+			assert.Equal(t, test.expected, adjacents)
 		})
 	}
 }
@@ -63,9 +69,10 @@ func TestMarkAccessibleRolls(t *testing.T) {
 
 	assert.Equal(t, 13, grid.CountMarkedRolls())
 
-	for _, test := range tests {
+	for i, r := range grid.AllRows() {
+		test := tests[i]
 		t.Run(test.name, func(t *testing.T) {
-			assert.Equal(t, test.expected, grid.GetRow(test.row))
+			assert.Equal(t, test.expected, r)
 		})
 	}
 }
