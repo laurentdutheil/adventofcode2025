@@ -44,6 +44,12 @@ func (g *Grid) MarkAccessibleRolls() {
 	}
 }
 
+func (g *Grid) RemoveAccessibleRolls() {
+	for i, line := range g.lines {
+		g.lines[i] = strings.ReplaceAll(line, "x", ".")
+	}
+}
+
 func (g *Grid) markLine(line int) {
 	for c := 0; c < len(g.lines[line]); c++ {
 		adjacents := g.FindAdjacents(c, line)
