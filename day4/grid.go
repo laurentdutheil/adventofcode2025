@@ -9,12 +9,37 @@ type Grid struct {
 	rows []string
 }
 
-type ColumnPosition int
-type RowPosition int
+func NewGrid() *Grid {
+	return &Grid{}
+}
 
-type Position struct {
-	Column ColumnPosition
-	Row    RowPosition
+func (g *Grid) AddLine(line string) {
+	g.rows = append(g.rows, line)
+}
+
+func (g *Grid) MarkAccessibleRolls() {
+	for p, adjacents := range g.AllAdjacents() {
+		if g.getChar(p) != "." {
+			rolls := strings.ReplaceAll(adjacents, ".", "")
+			if len(rolls) < 4 {
+				g.rows[p.Row] = replaceAtIndex(g.rows[p.Row], 'x', p.Column)
+			}
+		}
+	}
+}
+
+func (g *Grid) CountMarkedRolls() int {
+	result := 0
+	for _, line := range g.rows {
+		result += strings.Count(line, "x")
+	}
+	return result
+}
+
+func (g *Grid) RemoveAccessibleRolls() {
+	for i, line := range g.rows {
+		g.rows[i] = strings.ReplaceAll(line, "x", ".")
+	}
 }
 
 func (g *Grid) All() iter.Seq2[Position, string] {
@@ -50,64 +75,27 @@ func (g *Grid) AllAdjacents() iter.Seq2[Position, string] {
 	}
 }
 
-func NewGrid() *Grid {
-	return &Grid{}
-}
-
-func (g *Grid) AddLine(line string) {
-	g.rows = append(g.rows, line)
-}
-
 func (g *Grid) findAdjacents(position Position) string {
 	result := ""
-	row := position.Row
-	column := position.Column
-	for r := row - 1; r <= row+1; r++ {
-		for c := column - 1; c <= column+1; c++ {
-			if r != row || c != column {
-				result += g.getChar(Position{c, r})
-			}
-		}
+	for _, p := range position.Adjacents() {
+		result += g.getChar(p)
 	}
 	return result
 }
 
-func (g *Grid) CountMarkedRolls() int {
-	result := 0
-	for _, line := range g.rows {
-		result += strings.Count(line, "x")
+func (g *Grid) getChar(position Position) string {
+	if g.isInGrid(position) {
+		return string(g.rows[position.Row][position.Column])
 	}
-	return result
+	return ""
 }
 
-func (g *Grid) MarkAccessibleRolls() {
-	for p, adjacents := range g.AllAdjacents() {
-		if g.getChar(p) != "." {
-			rolls := strings.ReplaceAll(adjacents, ".", "")
-			if len(rolls) < 4 {
-				g.rows[p.Row] = replaceAtIndex(g.rows[p.Row], 'x', p.Column)
-			}
-		}
-	}
-}
-
-func (g *Grid) RemoveAccessibleRolls() {
-	for i, line := range g.rows {
-		g.rows[i] = strings.ReplaceAll(line, "x", ".")
-	}
+func (g *Grid) isInGrid(position Position) bool {
+	return 0 <= position.Row && int(position.Row) < len(g.rows) && 0 <= position.Column && int(position.Column) < len(g.rows[0])
 }
 
 func replaceAtIndex(in string, r rune, row ColumnPosition) string {
 	out := []rune(in)
 	out[row] = r
 	return string(out)
-}
-
-func (g *Grid) getChar(position Position) string {
-	row := position.Row
-	column := position.Column
-	if row < 0 || column < 0 || int(row) >= len(g.rows) || int(column) >= len(g.rows[row]) {
-		return ""
-	}
-	return string(g.rows[row][column])
 }
