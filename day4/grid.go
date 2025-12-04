@@ -3,7 +3,15 @@ package day4
 import "strings"
 
 type Grid struct {
-	lines []string
+	rows []string
+}
+
+type ColumnPosition int
+type RowPosition int
+
+type Position struct {
+	Column ColumnPosition
+	Row    RowPosition
 }
 
 func NewGrid() *Grid {
@@ -11,15 +19,17 @@ func NewGrid() *Grid {
 }
 
 func (g *Grid) AddLine(line string) {
-	g.lines = append(g.lines, line)
+	g.rows = append(g.rows, line)
 }
 
-func (g *Grid) FindAdjacents(column int, line int) string {
+func (g *Grid) FindAdjacents(position Position) string {
 	result := ""
-	for l := line - 1; l <= line+1; l++ {
+	row := position.Row
+	column := position.Column
+	for l := row - 1; l <= row+1; l++ {
 		for c := column - 1; c <= column+1; c++ {
-			if l != line || c != column {
-				result += g.getChar(c, l)
+			if l != row || c != column {
+				result += g.getChar(Position{c, l})
 			}
 		}
 	}
@@ -28,47 +38,51 @@ func (g *Grid) FindAdjacents(column int, line int) string {
 
 func (g *Grid) CountMarkedRolls() int {
 	result := 0
-	for _, line := range g.lines {
+	for _, line := range g.rows {
 		result += strings.Count(line, "x")
 	}
 	return result
 }
 
-func (g *Grid) GetLine(line int) string {
-	return g.lines[line]
+func (g *Grid) GetRow(row RowPosition) string {
+	return g.rows[row]
 }
 
 func (g *Grid) MarkAccessibleRolls() {
-	for l := 0; l < len(g.lines); l++ {
-		g.markLine(l)
+	for r := RowPosition(0); int(r) < len(g.rows); r++ {
+		g.markRow(r)
 	}
 }
 
 func (g *Grid) RemoveAccessibleRolls() {
-	for i, line := range g.lines {
-		g.lines[i] = strings.ReplaceAll(line, "x", ".")
+	for i, line := range g.rows {
+		g.rows[i] = strings.ReplaceAll(line, "x", ".")
 	}
 }
 
-func (g *Grid) markLine(line int) {
-	for c := 0; c < len(g.lines[line]); c++ {
-		adjacents := g.FindAdjacents(c, line)
-		adjacents = strings.ReplaceAll(adjacents, ".", "")
-		if g.getChar(c, line) != "." && len(adjacents) < 4 {
-			g.lines[line] = replaceAtIndex(g.lines[line], 'x', c)
+func (g *Grid) markRow(row RowPosition) {
+	for c := ColumnPosition(0); int(c) < len(g.rows[row]); c++ {
+		if g.getChar(Position{c, row}) != "." {
+			adjacents := g.FindAdjacents(Position{c, row})
+			adjacents = strings.ReplaceAll(adjacents, ".", "")
+			if len(adjacents) < 4 {
+				g.rows[row] = replaceAtIndex(g.rows[row], 'x', c)
+			}
 		}
 	}
 }
 
-func replaceAtIndex(in string, r rune, i int) string {
+func replaceAtIndex(in string, r rune, row ColumnPosition) string {
 	out := []rune(in)
-	out[i] = r
+	out[row] = r
 	return string(out)
 }
 
-func (g *Grid) getChar(column int, line int) string {
-	if line < 0 || column < 0 || line >= len(g.lines) || column >= len(g.lines[line]) {
+func (g *Grid) getChar(position Position) string {
+	row := position.Row
+	column := position.Column
+	if row < 0 || column < 0 || int(row) >= len(g.rows) || int(column) >= len(g.rows[row]) {
 		return "."
 	}
-	return string(g.lines[line][column])
+	return string(g.rows[row][column])
 }
