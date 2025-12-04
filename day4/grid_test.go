@@ -29,3 +29,43 @@ func TestFindAdjacents(t *testing.T) {
 		})
 	}
 }
+
+func TestMarkAccessibleRolls(t *testing.T) {
+	tests := []struct {
+		name     string
+		line     int
+		expected string
+	}{
+		{"mark line 0", 0, "..xx.xx@x."},
+		{"mark line 1", 1, "x@@.@.@.@@"},
+		{"mark line 2", 2, "@@@@@.x.@@"},
+		{"mark line 3", 3, "@.@@@@..@."},
+		{"mark line 4", 4, "x@.@@@@.@x"},
+		{"mark line 5", 5, ".@@@@@@@.@"},
+		{"mark line 6", 6, ".@.@.@.@@@"},
+		{"mark line 7", 7, "x.@@@.@@@@"},
+		{"mark line 8", 8, ".@@@@@@@@."},
+		{"mark line 9", 9, "x.x.@@@.x."},
+	}
+	grid := NewGrid()
+	grid.AddLine("..@@.@@@@.")
+	grid.AddLine("@@@.@.@.@@")
+	grid.AddLine("@@@@@.@.@@")
+	grid.AddLine("@.@@@@..@.")
+	grid.AddLine("@@.@@@@.@@")
+	grid.AddLine(".@@@@@@@.@")
+	grid.AddLine(".@.@.@.@@@")
+	grid.AddLine("@.@@@.@@@@")
+	grid.AddLine(".@@@@@@@@.")
+	grid.AddLine("@.@.@@@.@.")
+
+	grid.MarkAccessibleRolls()
+
+	assert.Equal(t, 13, grid.CountMarkedRolls())
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			assert.Equal(t, test.expected, grid.GetLine(test.line))
+		})
+	}
+}

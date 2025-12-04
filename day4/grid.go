@@ -1,5 +1,7 @@
 package day4
 
+import "strings"
+
 type Grid struct {
 	lines []string
 }
@@ -22,6 +24,40 @@ func (g *Grid) FindAdjacents(column int, line int) string {
 		}
 	}
 	return result
+}
+
+func (g *Grid) CountMarkedRolls() int {
+	result := 0
+	for _, line := range g.lines {
+		result += strings.Count(line, "x")
+	}
+	return result
+}
+
+func (g *Grid) GetLine(line int) string {
+	return g.lines[line]
+}
+
+func (g *Grid) MarkAccessibleRolls() {
+	for l := 0; l < len(g.lines); l++ {
+		g.markLine(l)
+	}
+}
+
+func (g *Grid) markLine(line int) {
+	for c := 0; c < len(g.lines[line]); c++ {
+		adjacents := g.FindAdjacents(c, line)
+		adjacents = strings.ReplaceAll(adjacents, ".", "")
+		if g.getChar(c, line) != "." && len(adjacents) < 4 {
+			g.lines[line] = replaceAtIndex(g.lines[line], 'x', c)
+		}
+	}
+}
+
+func replaceAtIndex(in string, r rune, i int) string {
+	out := []rune(in)
+	out[i] = r
+	return string(out)
 }
 
 func (g *Grid) getChar(column int, line int) string {
