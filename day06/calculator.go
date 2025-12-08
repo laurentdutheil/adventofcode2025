@@ -34,6 +34,19 @@ func (c *Calculator) Operators() []string {
 	return result
 }
 
+func (c *Calculator) Compute() int {
+	result := 0
+	for i := 0; i < len(c.Numbers); i++ {
+		o := c.operators[i]
+		cumulative := o.Neutral()
+		for _, n := range c.Numbers[i] {
+			cumulative = o(n, cumulative)
+		}
+		result += cumulative
+	}
+	return result
+}
+
 type Operator func(int, int) int
 
 func (o Operator) String() string {
@@ -43,6 +56,13 @@ func (o Operator) String() string {
 		return "*"
 	}
 	return ""
+}
+
+func (o Operator) Neutral() int {
+	if o.String() == "*" {
+		return 1
+	}
+	return 0
 }
 
 var operators = map[string]Operator{

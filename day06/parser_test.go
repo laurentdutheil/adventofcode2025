@@ -20,3 +20,9 @@ func TestParseLine(t *testing.T) {
 	assert.Equal(t, []int{64, 23, 314}, calculator.Column(3))
 	assert.Equal(t, []string{"*", "+", "*", "+"}, calculator.Operators())
 }
+
+func TestParseFile(t *testing.T) {
+	calculator := ParseFile()
+	total := calculator.Compute()
+	assert.Equal(t, 4076006202939, total)
+}
