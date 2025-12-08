@@ -1,8 +1,14 @@
 package day06
 
+import (
+	"strconv"
+	"strings"
+)
+
 type Calculator struct {
 	Numbers   [][]int
 	operators []Operator
+	lines     []string
 }
 
 func NewCalculator() *Calculator {
@@ -45,6 +51,37 @@ func (c *Calculator) Compute() int {
 		result += cumulative
 	}
 	return result
+}
+
+func (c *Calculator) LeftToRightCompute() int {
+	pivot := Pivot(c.lines[:len(c.lines)-1])
+
+	i := 0
+	for _, s := range pivot {
+		if strings.TrimSpace(s) == "" {
+			i++
+			continue
+		}
+		n, _ := strconv.Atoi(strings.TrimSpace(s))
+		c.AddNumberInColumn(n, i)
+	}
+
+	ParseLine(c.lines[len(c.lines)-1], c)
+
+	return c.Compute()
+}
+
+func Pivot(lines []string) []string {
+	var p []string
+	l := len(lines[0])
+	for j := 0; j < l; j++ {
+		p = append(p, "")
+		for _, line := range lines {
+			p[j] = p[j] + string(line[j])
+		}
+	}
+
+	return p
 }
 
 type Operator func(int, int) int

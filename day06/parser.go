@@ -30,3 +30,20 @@ func ParseLine(line string, calculator *Calculator) {
 		}
 	}
 }
+
+func ParseLine2(line string, calculator *Calculator) {
+	calculator.lines = append(calculator.lines, line)
+
+}
+
+func ParseFile2() *Calculator {
+	file, _ := os.Open("input.txt")
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	calculator := NewCalculator()
+	for scanner.Scan() {
+		line := scanner.Text()
+		ParseLine2(line, calculator)
+	}
+	return calculator
+}
