@@ -1,17 +1,17 @@
-package day4
+package day03
 
 import (
 	"bufio"
 	"os"
 )
 
-func ParseFile() *Grid {
+func ParseFile() int {
 	file, _ := os.Open("input.txt")
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
-	grid := NewGrid()
+	total := 0
 	for scanner.Scan() {
-		grid.AddLine(scanner.Text())
+		total += MaxJoltage(scanner.Text())
 	}
-	return grid
+	return total
 }

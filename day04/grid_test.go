@@ -1,7 +1,7 @@
-package day4_test
+package day04_test
 
 import (
-	. "adventofcode2025/day4"
+	. "adventofcode2025/day04"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

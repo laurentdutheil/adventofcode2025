@@ -1,20 +1,20 @@
-package day4_test
+package day04_test
 
 import (
-	"adventofcode2025/day4"
+	"adventofcode2025/day04"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestAccessibleRolls(t *testing.T) {
-	grid := day4.ParseFile()
+	grid := day04.ParseFile()
 	grid.MarkAccessibleRolls()
 	assert.Equal(t, 1508, grid.CountMarkedRolls())
 }
 
 func TestRemoveAccessibleRolls(t *testing.T) {
-	grid := day4.ParseFile()
+	grid := day04.ParseFile()
 	count := 0
 	grid.MarkAccessibleRolls()
 	countMarkedRolls := grid.CountMarkedRolls()

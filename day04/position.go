@@ -1,4 +1,4 @@
-package day4
+package day04
 
 type ColumnPosition int
 type RowPosition int
