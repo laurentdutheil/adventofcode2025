@@ -46,7 +46,7 @@ func (c *Calculator) Compute() int {
 		o := c.operators[i]
 		cumulative := o.Neutral()
 		for _, n := range c.Numbers[i] {
-			cumulative = o(n, cumulative)
+			cumulative = o.compute(n, cumulative)
 		}
 		result += cumulative
 	}
@@ -56,14 +56,14 @@ func (c *Calculator) Compute() int {
 func (c *Calculator) LeftToRightCompute() int {
 	pivot := Pivot(c.lines[:len(c.lines)-1])
 
-	i := 0
+	column := 0
 	for _, s := range pivot {
 		if strings.TrimSpace(s) == "" {
-			i++
-			continue
+			column++
+		} else {
+			n, _ := strconv.Atoi(strings.TrimSpace(s))
+			c.AddNumberInColumn(n, column)
 		}
-		n, _ := strconv.Atoi(strings.TrimSpace(s))
-		c.AddNumberInColumn(n, i)
 	}
 
 	ParseLine(c.lines[len(c.lines)-1], c)
@@ -72,37 +72,12 @@ func (c *Calculator) LeftToRightCompute() int {
 }
 
 func Pivot(lines []string) []string {
-	var p []string
-	l := len(lines[0])
-	for j := 0; j < l; j++ {
-		p = append(p, "")
+	var result []string
+	for j := 0; j < len(lines[0]); j++ {
+		result = append(result, "")
 		for _, line := range lines {
-			p[j] = p[j] + string(line[j])
+			result[j] += string(line[j])
 		}
 	}
-
-	return p
-}
-
-type Operator func(int, int) int
-
-func (o Operator) String() string {
-	if o(2, 3) == 5 {
-		return "+"
-	} else if o(2, 3) == 6 {
-		return "*"
-	}
-	return ""
-}
-
-func (o Operator) Neutral() int {
-	if o.String() == "*" {
-		return 1
-	}
-	return 0
-}
-
-var operators = map[string]Operator{
-	"+": func(a, b int) int { return a + b },
-	"*": func(a, b int) int { return a * b },
+	return result
 }

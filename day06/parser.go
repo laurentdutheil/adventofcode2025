@@ -33,7 +33,6 @@ func ParseLine(line string, calculator *Calculator) {
 
 func ParseLine2(line string, calculator *Calculator) {
 	calculator.lines = append(calculator.lines, line)
-
 }
 
 func ParseFile2() *Calculator {
