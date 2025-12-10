@@ -25,10 +25,11 @@ func (p *Playground) SortCombinations() {
 	})
 }
 
-func (p *Playground) Group(nbCables int) {
+func (p *Playground) Group(nbCables int) Pair {
 	currentCircuit := 0
+	var pair Pair
 	for i := 0; i < nbCables; i++ {
-		pair := p.Combinations[i]
+		pair = *p.Combinations[i]
 		if pair.p1.Circuit == 0 && pair.p2.Circuit == 0 {
 			currentCircuit++
 			pair.p1.Circuit = currentCircuit
@@ -40,7 +41,11 @@ func (p *Playground) Group(nbCables int) {
 		} else if pair.p1.Circuit != pair.p2.Circuit {
 			p.mergeCircuits(pair.p1.Circuit, pair.p2.Circuit)
 		}
+		if p.AllConnected() {
+			break
+		}
 	}
+	return pair
 }
 
 func (p *Playground) mergeCircuits(c1 int, c2 int) {
@@ -64,4 +69,13 @@ func (p *Playground) CountPart1() int {
 	sort.Sort(sort.Reverse(sort.IntSlice(v)))
 
 	return v[0] * v[1] * v[2]
+}
+
+func (p *Playground) AllConnected() bool {
+	for _, box := range p.JunctionBoxes {
+		if box.Circuit == 0 {
+			return false
+		}
+	}
+	return true
 }

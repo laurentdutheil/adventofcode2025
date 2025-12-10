@@ -28,6 +28,10 @@ func (pair Pair) Distance() float64 {
 	return math.Sqrt(dx + dy + dz)
 }
 
+func (pair Pair) DistanceWall() int {
+	return pair.p1.X * pair.p2.X
+}
+
 func NewPair(p1 *JunctionBox, p2 *JunctionBox) *Pair {
 	return &Pair{p1: p1, p2: p2}
 }
