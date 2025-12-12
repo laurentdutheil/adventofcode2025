@@ -13,8 +13,10 @@ func NewFloor() *Floor {
 
 func (f *Floor) LargestRectangle() int {
 	maxArea := 0
-	for _, p1 := range f.RedTiles {
-		for _, p2 := range f.RedTiles {
+	for i := 0; i < len(f.RedTiles); i++ {
+		p1 := f.RedTiles[i]
+		for j := i; j < len(f.RedTiles); j++ {
+			p2 := f.RedTiles[j]
 			area := Area(p1, p2)
 			if area > maxArea {
 				maxArea = area
@@ -26,13 +28,13 @@ func (f *Floor) LargestRectangle() int {
 
 func (f *Floor) LargestRectanglePart2() int {
 	maxArea := 0
-	for _, p1 := range f.RedTiles {
-		for _, p2 := range f.RedTiles {
-			if f.isIncluded(p1, p2) {
-				area := Area(p1, p2)
-				if area > maxArea {
-					maxArea = area
-				}
+	for i := 0; i < len(f.RedTiles); i++ {
+		p1 := f.RedTiles[i]
+		for j := i; j < len(f.RedTiles); j++ {
+			p2 := f.RedTiles[j]
+			area := Area(p1, p2)
+			if area > maxArea && f.isIncluded(p1, p2) {
+				maxArea = area
 			}
 		}
 	}
@@ -97,20 +99,21 @@ func (f *Floor) updateGreenSegment(tile Position, previousRedTile *Position) {
 }
 
 func (f *Floor) isIncluded(p1 Position, p2 Position) bool {
-	corner1 := Position{
+	pMin := Position{
 		Column: min(p1.Column, p2.Column),
 		Row:    min(p1.Row, p2.Row),
 	}
-	corner2 := Position{
+	pMax := Position{
 		Column: max(p1.Column, p2.Column),
 		Row:    max(p1.Row, p2.Row),
 	}
 
-	result := true
-	for r := corner1.Row; r <= corner2.Row; r++ {
-		result = result && corner1.Column >= f.GreenSegments[r].First && corner2.Column <= f.GreenSegments[r].Last
+	for r := pMin.Row; r <= pMax.Row; r++ {
+		if pMin.Column < f.GreenSegments[r].First || pMax.Column > f.GreenSegments[r].Last {
+			return false
+		}
 	}
-	return result
+	return true
 }
 
 func Area(p1 Position, p2 Position) int {
