@@ -8,7 +8,7 @@ import (
 )
 
 func TestParser_ParseLine(t *testing.T) {
-	floor := &Floor{}
+	floor := NewFloor()
 	parser := NewParser(floor)
 
 	parser.ParseLine("7,1")
@@ -25,7 +25,7 @@ func TestParser_ParseLine(t *testing.T) {
 }
 
 func TestParser_ParseFile(t *testing.T) {
-	floor := &Floor{}
+	floor := NewFloor()
 	parser := NewParser(floor)
 
 	parser.ParseFile()

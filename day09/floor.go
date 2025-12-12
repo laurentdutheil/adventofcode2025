@@ -1,10 +1,17 @@
 package day09
 
 type Floor struct {
-	RedTiles []Position
+	RedTiles      []Position
+	GreenSegments map[int]*GreenSegment
 }
 
-func (f Floor) LargestRectangle() int {
+func NewFloor() *Floor {
+	f := &Floor{}
+	f.GreenSegments = make(map[int]*GreenSegment)
+	return f
+}
+
+func (f *Floor) LargestRectangle() int {
 	maxArea := 0
 	for _, p1 := range f.RedTiles {
 		for _, p2 := range f.RedTiles {
@@ -15,6 +22,63 @@ func (f Floor) LargestRectangle() int {
 		}
 	}
 	return maxArea
+}
+
+func (f *Floor) GetSegment(row int) *GreenSegment {
+	return f.GreenSegments[row]
+}
+
+func (f *Floor) DetermineGreenSegments() {
+	var previousRedTile *Position
+	for _, tile := range f.RedTiles {
+		if previousRedTile != nil {
+			if previousRedTile.Row == tile.Row {
+				f.updateGreenSegment(tile, previousRedTile)
+			} else {
+				for row := min(previousRedTile.Row, tile.Row); row <= max(previousRedTile.Row, tile.Row); row++ {
+					p := Position{
+						Column: tile.Column,
+						Row:    row,
+					}
+					f.updateGreenSegment(p, previousRedTile)
+				}
+			}
+		}
+		previousRedTile = &tile
+	}
+
+	// link last to first
+	tile := f.RedTiles[0]
+	if previousRedTile != nil {
+		if previousRedTile.Row == tile.Row {
+			f.updateGreenSegment(tile, previousRedTile)
+		} else {
+			for row := min(previousRedTile.Row, tile.Row); row <= max(previousRedTile.Row, tile.Row); row++ {
+				p := Position{
+					Column: tile.Column,
+					Row:    row,
+				}
+				f.updateGreenSegment(p, previousRedTile)
+			}
+		}
+	}
+
+}
+
+func (f *Floor) updateGreenSegment(tile Position, previousRedTile *Position) {
+	_, ok := f.GreenSegments[tile.Row]
+	if !ok {
+		f.GreenSegments[tile.Row] = &GreenSegment{
+			First: min(previousRedTile.Column, tile.Column),
+			Last:  max(previousRedTile.Column, tile.Column),
+		}
+	}
+	if f.GreenSegments[tile.Row].First > tile.Column {
+		f.GreenSegments[tile.Row].First = tile.Column
+	}
+	if f.GreenSegments[tile.Row].Last < tile.Column {
+		f.GreenSegments[tile.Row].Last = tile.Column
+	}
 }
 
 func Area(p1 Position, p2 Position) int {
@@ -31,4 +95,9 @@ func Abs(x int) int {
 type Position struct {
 	Column int
 	Row    int
+}
+
+type GreenSegment struct {
+	First int
+	Last  int
 }
