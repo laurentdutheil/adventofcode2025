@@ -28,4 +28,7 @@ func TestDetermineGreenSegments(t *testing.T) {
 	assert.Equal(t, &GreenSegment{First: 2, Last: 11}, floor.GetSegment(5))
 	assert.Equal(t, &GreenSegment{First: 9, Last: 11}, floor.GetSegment(6))
 	assert.Equal(t, &GreenSegment{First: 9, Last: 11}, floor.GetSegment(7))
+
+	area := floor.LargestRectanglePart2()
+	assert.Equal(t, 24, area)
 }

@@ -33,3 +33,15 @@ func TestParser_ParseFile(t *testing.T) {
 
 	assert.Equal(t, 4777816465, area)
 }
+
+func TestParser_ParseFilePart2(t *testing.T) {
+	floor := NewFloor()
+	parser := NewParser(floor)
+
+	parser.ParseFile()
+	floor.DetermineGreenSegments()
+
+	area := floor.LargestRectanglePart2()
+
+	assert.Equal(t, 1410501884, area)
+}
